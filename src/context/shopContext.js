@@ -16,11 +16,15 @@ export class shopProvider extends Component {
     checkout: {},
     isCartOpen: false,
     isMenuOpen: false,
-    value: 0
+    value: 0,
   };
 
   componentDidMount() {
-    this.createCheckout()
+    if (localStorage.checkout_id) {
+      this.fetchCheckout(localStorage.checkout_id)
+    } else {
+      this.createCheckout();
+    }
   }
 
   createCheckout = async () => {
@@ -30,7 +34,11 @@ export class shopProvider extends Component {
     this.setState({ checkout: checkout });
   };
 
-  fetchCheckout = async () => {};
+  fetchCheckout = (checkoutId) => {
+    client.checkout.fetch(checkoutId).then((checkout) => {
+      this.setState({ checkout: checkout });
+    });
+  };
 
   addItemtoCheckout = async () => {};
 
@@ -57,8 +65,22 @@ export class shopProvider extends Component {
   openMenu = () => {};
 
   render() {
-    console.log(this.state.checkout)
-    return <ShopContext.Provider>{this.props.children}</ShopContext.Provider>;
+    return (
+      <ShopContext.Provider
+        value={{ 
+          ...this.state,
+          fetchAllProducts: this.fetchAllProducts,
+          fetchProductWithHandle: this.fetchProductWithHandle,
+          addItemtoCheckout: this.addItemtoCheckout,
+          removeLineItem: this.removeLineItem,
+          closeCart: this.closeCart,
+          openCart: this.openCart,
+          closeMenu: this.closeMenu,
+          openMenu: this.openMenu
+        }}>
+        {this.props.children}
+      </ShopContext.Provider>
+    )
   }
 }
 

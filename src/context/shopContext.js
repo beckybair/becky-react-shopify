@@ -30,7 +30,7 @@ export class shopProvider extends Component {
   createCheckout = async () => {
     // Create an empty checkout
     const checkout = await client.checkout.create();
-    localStorage.setItem("checkout-id", checkout.id);
+    localStorage.setItem("checkout_id", checkout.id);
     this.setState({ checkout: checkout });
   };
 
